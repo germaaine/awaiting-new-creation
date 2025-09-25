@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CheckCircle2, Circle, Plus } from "lucide-react";
 
 type Task = {
@@ -21,7 +21,7 @@ const initialTasks: Task[] = [
   { id: 4, text: "Start a compost bin at home", category: "project", completed: false, impact: "Diverted food waste from landfill" },
   { id: 5, text: "Join a park/beach cleanup", category: "project", completed: false, impact: "Helped restore biodiversity" },
   { id: 6, text: "Community Fridge 2.0 (share surplus food in HDB)", category: "project", completed: false, impact: "Feeds 50 families weekly if scaled" },
-  { id: 8, text: "Clothes Swap Nights at Void Decks", category: "project", completed: false, impact: "Brings neighbours together + reduces waste" },
+  { id: 7, text: "Clothes Swap Nights at Void Decks", category: "project", completed: false, impact: "Brings neighbours together + reduces waste" },
 ];
 
 export default function SustainabilityTodo() {

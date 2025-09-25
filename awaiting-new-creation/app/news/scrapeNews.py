@@ -1,7 +1,12 @@
 from newsapi import NewsApiClient
+from dotenv import load_dotenv
+import os
 
+load_dotenv() # Load environment variables from .env file
+
+api_key = os.getenv('API_KEY')
 # Init
-newsapi = NewsApiClient(api_key='ea850b3f35544409a0036bd9254d58be')
+newsapi = NewsApiClient(api_key=api_key)
 
 # /v2/top-headlines
 # top_headlines = newsapi.get_top_headlines(q='bitcoin',
