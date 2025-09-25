@@ -1,7 +1,8 @@
 "use client";
-
+import { Task } from "../../types"; // adjust path as needed
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Article = {
   title: string;
@@ -84,10 +85,33 @@ const articles: Article[] = [
 export default function NewsPage() {
   const [tasks, setTasks] = useState<string[]>([]);
 
-  const addTask = (task: string) => {
-    setTasks((prev) => [...prev, task]);
-    alert(`Added to your to-do list: ${task}`);
+const addTask = (task: string) => {
+  const stored = localStorage.getItem("tasks");
+  const existing = stored ? JSON.parse(stored) : [];
+
+  // prevent duplicates by checking text
+  if (existing.some((t: Task) => t.text === task)) {
+    alert("Task already in your list ✅");
+    window.location.href = "/steps";
+    return;
+  }
+
+  const newTask: Task = {
+    id: Date.now(),
+    text: task,
+    category: "daily",
+    completed: false,
+    impact: "You're an eco-champion! 🌱",
   };
+
+  const updated = [...existing, newTask];
+  localStorage.setItem("tasks", JSON.stringify(updated));
+
+  alert(`Added to your to-do list: ${task}`);
+  window.location.href = "/steps";
+};
+
+const router = useRouter();
 
   return (
     <main className="min-h-screen bg-gray-50 p-8">
@@ -126,7 +150,6 @@ export default function NewsPage() {
               <button
                 onClick={() => {
                   addTask(article.task);
-                  window.location.href = '/steps';
                 }}
                 className="mt-auto bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition"
               >
@@ -144,6 +167,14 @@ export default function NewsPage() {
           </div>
         ))}
       </div>
+
+  <button
+  onClick={() => router.push("/steps")}
+  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition mb-6"
+>
+  🌱 Go to My To-Do List
+</button>
+
     </main>
   );
 }

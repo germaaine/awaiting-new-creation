@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { CheckCircle2, Circle, Plus } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 type Task = {
   id: number;
   text: string;
@@ -27,7 +27,22 @@ const initialTasks: Task[] = [
 ];
 
 export default function SustainabilityTodo() {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, setTasks] = useState<Task[]>(() => {
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem("tasks");
+    const savedTasks = stored ? JSON.parse(stored) : [];
+
+    // Avoid duplicate "default tasks" by filtering only new ones
+    const defaultIds = new Set(initialTasks.map((t) => t.text));
+    const filteredSaved = savedTasks.filter(
+      (t: Task) => !defaultIds.has(t.text)
+    );
+
+    return [...initialTasks, ...filteredSaved];
+  }
+  return initialTasks;
+});
+
   const [impactMessages, setImpactMessages] = useState<string[]>([]);
   const [newTaskText, setNewTaskText] = useState("");
 
@@ -70,6 +85,7 @@ export default function SustainabilityTodo() {
         prev.map((t) => (t.id === id ? { ...t, buddy } : t))
     );
   };
+const router = useRouter();
 
   return (
     <main className="min-h-screen bg-gray-50 p-8">
@@ -100,11 +116,11 @@ export default function SustainabilityTodo() {
         </h2>
         <div className="bg-white rounded-xl shadow p-4 space-y-3">
           {dailyTasks.map((task) => (
-            <div
+            <div 
               key={task.id}
               className={`flex items-center justify-between p-3 rounded-lg transition ${
                 task.completed ? "bg-green-50" : "hover:bg-gray-50"
-              }`}
+                }`}
             >
               <button
                 onClick={() => toggleTask(task.id)}
@@ -225,7 +241,14 @@ export default function SustainabilityTodo() {
             have saved <span className="font-semibold text-green-700">{buddyImpact}</span> so far! 🌍
         </p>
     </div> */}
+  
 
+<button
+  onClick={() => router.push("/news")}
+  className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition mb-6"
+>
+  ← Back to News
+</button>
     </main>
 );
     };
