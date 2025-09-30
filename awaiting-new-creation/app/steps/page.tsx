@@ -27,21 +27,27 @@ const initialTasks: Task[] = [
 ];
 
 export default function SustainabilityTodo() {
-  const [tasks, setTasks] = useState<Task[]>(() => {
-  if (typeof window !== "undefined") {
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+
+  useEffect(() => {
     const stored = localStorage.getItem("tasks");
-    const savedTasks = stored ? JSON.parse(stored) : [];
+    if (stored) {
+      const savedTasks: Task[] = JSON.parse(stored);
 
-    // Avoid duplicate "default tasks" by filtering only new ones
-    const defaultIds = new Set(initialTasks.map((t) => t.text));
-    const filteredSaved = savedTasks.filter(
-      (t: Task) => !defaultIds.has(t.text)
-    );
+      // Avoid duplicating initial tasks
+      const savedIds = new Set(savedTasks.map((t) => t.id));
+      const merged = [
+        ...initialTasks.filter((t) => !savedIds.has(t.id)),
+        ...savedTasks,
+      ];
 
-    return [...initialTasks, ...filteredSaved];
-  }
-  return initialTasks;
-});
+      setTasks(merged);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const [impactMessages, setImpactMessages] = useState<string[]>([]);
   const [newTaskText, setNewTaskText] = useState("");
@@ -64,13 +70,13 @@ export default function SustainabilityTodo() {
 
   const addTask = () => {
     if (!newTaskText.trim()) return;
-    const newTask: Task = {
-      id: tasks.length + 1,
-      text: newTaskText,
-      category: "daily", // default new tasks as daily
-      completed: false,
-      impact: "You're an eco-champion!",
-    };
+  const newTask: Task = {
+    id: Date.now(), // unique id
+    text: newTaskText,
+    category: "daily",
+    completed: false,
+    impact: "You're an eco-champion!",
+  };
     setTasks((prev) => [...prev, newTask]);
     setNewTaskText("");
   };
@@ -86,7 +92,10 @@ export default function SustainabilityTodo() {
     );
   };
 const router = useRouter();
-
+const resetTasks = () => {
+  setTasks(initialTasks);          // reset state
+  localStorage.removeItem("tasks"); // clear persisted tasks
+};
   return (
     <main className="min-h-screen bg-gray-50 p-8">
       <h1 className="text-3xl font-bold mb-6 text-center text-green-700">
@@ -241,6 +250,12 @@ const router = useRouter();
             have saved <span className="font-semibold text-green-700">{buddyImpact}</span> so far! 🌍
         </p>
     </div> */}
+    {/* <button
+  onClick={resetTasks}
+  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+>
+  Reset Tasks
+</button> */}
   
 
 <button
