@@ -1,5 +1,5 @@
 # awaiting-new-creation
-# An App for Environmental Sustainability
+### Digi Tech 4 Env Sustainability
 
 **Problem:**  
 Many people are interested in environmental sustainability but feel overwhelmed by the sheer volume of advice. They want to take responsibility and make a positive impact, but are unsure how to translate interest into consistent, meaningful action.
@@ -26,3 +26,15 @@ This app transforms light interest into everyday commitment. It guides users fro
 
 **Impact:**  
 By integrating curated knowledge, actionable steps, and social motivation, the app helps users make manageable, effective contributions to sustainability, while feeling part of a community striving for positive environmental change.
+
+### Run Locally
+
+`cd awaiting-new-creation`
+
+`cd app`
+
+`npm run start`
+
+News Page: ```localhost:3000/news```
+
+To-Do List Page:```localhost:3000/steps```
