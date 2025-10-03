@@ -33,6 +33,8 @@ By integrating curated knowledge, actionable steps, and social motivation, the a
 
 `cd app`
 
+`npm run build`
+
 `npm run start`
 
 News Page: ```localhost:3000/news```
